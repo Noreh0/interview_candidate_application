@@ -2,6 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Candidato(models.Model):
+    STATUS_CHOICES = [
+        ('em_analise', 'Em Analise'),
+        ('aprovado', 'Aprovado'),
+        ('rejeitado', 'Rejeitado')
+    ]
+    
     #Dados pessoais
     nome = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
@@ -24,8 +30,25 @@ class Candidato(models.Model):
 
     #Dados da Vaga
     vaga_interesse = models.CharField(max_length=200)
-    expectativa_Salarial = models.DecimalField(max_digits=15, decimal_places=2, help_text="Expectativa salarial para a vaga")
+    pretensao_salarial = models.DecimalField(max_digits=15, decimal_places=2, help_text="Expectativa salarial para a vaga")
     disponibilidade_inicio = models.DateField(help_text="Data em que possa ingressar")
     disponibilidade_locomocao = models.BooleanField(help_text="Disponibilidade para mudança de cidade ou estado")
-    
+    regime_trabalho = models.CharField(max_length = 50, choices = [
+        ('presencial', 'Presencial'),
+        ('remoto', 'Remoto'),
+        ('hibrido', 'Híbrido')
+    ])
+
+    # Controle de criação
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default = 'em_analise')
+    data_cadastro = models.DateTimeField(auto_now_add=True)
+    observacao_rh = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = 'Candidato'
+        verbose_name_plural = 'Candidatos'
+        ordering = ['-data_cadastro']
+
+    def __str__(self):
+        return f"{self.nome} - {self.vaga_interesse}"
         
