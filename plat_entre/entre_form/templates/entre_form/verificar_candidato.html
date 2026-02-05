@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Candidato</title>
+</head>
+<body>
+    <h1>Editar Cadastro</h1>
+    <p>Já se cadastrou? Digite as informações necessárias abaixo:</p>
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li style="color: red;">{{message}}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Verificar</button>
+    </form>
+    <hr>
+    <a href="{% url 'etapa_1_pessoais' %}">Não tenho cadastro, mas quero me candidatar!</a>
+</body>
+</html>

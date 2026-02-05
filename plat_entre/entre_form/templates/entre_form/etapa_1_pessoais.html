@@ -6,7 +6,12 @@
     <title>Etapa 1 - Dados Pessoais</title>
 </head>
 <body>
-    <h1>Etapa 1 - Dados Pessoais</h1>
+    {% if edit_mode %}
+        <h1>Editando Dados Pessoais</h1>
+    {% else %}
+        <h1>Etapa 1 - Dados Pessoais</h1>
+        <p> Já tem Cadastro?<a href="{% url 'verificar_candidato' %}">Clique aqui para editar seu Perfil</a></p>
+    {% endif %}
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{form.as_p}}

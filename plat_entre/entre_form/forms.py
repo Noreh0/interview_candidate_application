@@ -1,6 +1,11 @@
 from django import forms
 from .models import Candidato
 
+class verificarCandidatoForm(forms.Form):
+    email = forms.EmailField(label="Seu E-mail", widget = forms.EmailInput(attrs={'class': 'form-control'}))
+    cpf = forms.CharField(label="Seu CPF", widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': '000.000.000-00'}))
+
+
 class dadosPessoais(forms.ModelForm):
     class Meta:
         model = Candidato
@@ -30,7 +35,7 @@ class dadosProfissionais(forms.ModelForm):
             'cargo_atual': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Projetista'}),
             'empresa_atual': forms.TextInput(attrs={'class': 'form-control'}),
             'salario_atual': forms.NumberInput(attrs={'class': 'form-control', 'min': '0'}),
-            'resumo_profissional': forms.TextInput(attrs={'class': 'form-control', 'rows': '5'})
+            'resumo_profissional': forms.Textarea(attrs={'class': 'form-control', 'rows': '5'})
         }
 
 class dadosVagas(forms.ModelForm):

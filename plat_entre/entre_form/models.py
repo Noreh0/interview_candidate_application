@@ -7,6 +7,10 @@ class Candidato(models.Model):
         ('aprovado', 'Aprovado'),
         ('rejeitado', 'Rejeitado')
     ]
+    LOCOMOCAO_CHOICES = [
+        ('sim', 'Sim'),
+        ('nao', 'Não')
+        ]
     
     #Dados pessoais
     nome = models.CharField(max_length=200)
@@ -33,7 +37,7 @@ class Candidato(models.Model):
     vaga_interesse = models.CharField(max_length=200)
     pretensao_salarial = models.DecimalField(max_digits=15, decimal_places=2, help_text="Expectativa salarial para a vaga")
     disponibilidade_inicio = models.DateField(help_text="Data em que possa ingressar")
-    disponibilidade_locomocao = models.BooleanField(help_text="Disponibilidade para mudança de cidade ou estado")
+    disponibilidade_locomocao = models.CharField(max_length=30, choices=LOCOMOCAO_CHOICES)
     regime_trabalho = models.CharField(max_length = 50, choices = [
         ('presencial', 'Presencial'),
         ('remoto', 'Remoto'),
