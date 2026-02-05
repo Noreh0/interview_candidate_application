@@ -8,7 +8,7 @@ from .forms import dadosPessoais, dadosProfissionais, dadosVagas, avaliacaoRH
 def is_rh(user):
     return user.is_staff or user.groups.filter(name="RH").exists()
 
-def dados_pessoais_1(request):
+def etapa_1_pessoais(request):
     if request.method == 'POST':
         form = dadosPessoais(request.POST)
         if form.is_valid():
@@ -22,7 +22,7 @@ def dados_pessoais_1(request):
         form = dadosPessoais()
     return render(request, 'entre_form/etapa_1_pessoais.html', {'form': form, 'etapa': 1})
 
-def dados_profissionais_2(request):
+def etapa_2_profissionais(request):
     candidato_id = request.session.get('candidato_id')
     if not candidato_id:
         messages.error(request, 'Por Favor, Preencha os dados pessoais primeiro')
@@ -37,7 +37,7 @@ def dados_profissionais_2(request):
     else:
         form = dadosProfissionais(instance=candidato)
     return render(request, 'entre_form/etapa_2_profissionais.html', {'form': form, 'etapa': 2})
-def dados_vaga_3(request):
+def etapa_3_vaga(request):
     candidato_id = request.session.get('candidato_id')
     if not candidato_id:
         messages.error(request, 'Por Favor, Preencha os dados pessoais primeiro')
@@ -73,3 +73,22 @@ def painel_rh(request):
     }
     return render(request, 'entre_form/painel_rh.html', context)
 
+@login_required
+@user_passes_test(is_rh)
+def visualizar_candidato(request, candidato_id):
+    candidato = get_object_or_404(Candidato, pk = candidato_id)
+    return render(request, 'entre_form/visualizar_candidato.html', {'candidato': candidato})
+
+@login_required
+@user_passes_test(is_rh)
+def avaliar_candidato(request, candidato_id):
+    candidato = get_object_or_404(Candidato, pk=candidato_id)
+    if request.method == 'POST':
+        form = avaliacaoRH(request.POST, instance=candidato)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Avaliação salva com sucesso!")
+            return redirect('visualizar_candidato', candidato_id=candidato.id)
+    else:
+        form = avaliacaoRH(instance=candidato)
+    return render(request, 'entre_form/avaliar_candidato.html', {'form': form, 'candidato': candidato})

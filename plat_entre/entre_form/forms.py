@@ -4,7 +4,7 @@ from .models import Candidato
 class dadosPessoais(forms.ModelForm):
     class Meta:
         model = Candidato
-        fields = ['nome', 'email', 'telefone', 'data_nascimento', 'cpf', 'endereco', 'cidade', 'estado']
+        fields = ['nome', 'email', 'telefone', 'data_nascimento', 'cpf', 'endereco', 'cidade', 'estado', 'curriculo']
 
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome Completo'}),
@@ -15,6 +15,7 @@ class dadosPessoais(forms.ModelForm):
             'endereco': forms.TextInput(attrs={'class': 'form-control', 'rows':3}),
             'cidade': forms.TextInput(attrs={'class': 'form-control'}),
             'estado': forms.TextInput(attrs={'class': 'form-control', 'maxlength': '2', 'placeholder': 'PR'}),
+            'curriculo': forms.ClearableFileInput(attrs={'class': 'form-control'})
         }
 
 class dadosProfissionais(forms.ModelForm):
@@ -23,8 +24,8 @@ class dadosProfissionais(forms.ModelForm):
         fields = ['formacao', 'instituicao_ensino', 'ano_concluido', 'experiencia_anos', 'cargo_atual', 'empresa_atual', 'resumo_profissional']
         widgets = {
             'formacao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Engenharia Mecânica'}),
-            'instuicao_ensino': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Universidade Federal do Paraná'}),
-            'ano_conclusao': forms.NumberInput(attrs={'class': 'form-control', 'min': '1950', 'max': '2030'}),
+            'instituicao_ensino': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Universidade Federal do Paraná'}),
+            'ano_concluido': forms.NumberInput(attrs={'class': 'form-control', 'min': '1950', 'max': '2030'}),
             'experiencia_anos': forms.NumberInput(attrs={'class': 'form-control', 'min': '0'}),
             'cargo_atual': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Projetista'}),
             'empresa_atual': forms.TextInput(attrs={'class': 'form-control'}),
@@ -39,7 +40,7 @@ class dadosVagas(forms.ModelForm):
 
         widgets = {
             'vaga_interesse': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Engenheiro de Projetos'}),
-            'pretencao_salarial': forms.NumberInput(attrs={'class': 'form-control', 'min': '0', 'step': '0.01'}),
+            'pretensao_salarial': forms.NumberInput(attrs={'class': 'form-control', 'min': '0', 'step': '0.01'}),
             'disponibilidade_inicio': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'disponibilidade_locomocao': forms.Select(attrs={'class': 'form-control'}),
             'regime_trabalho': forms.Select(attrs={'class': 'form-control'})

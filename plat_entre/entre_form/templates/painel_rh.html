@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel RH</title>
+</head>
+<body>
+    <h1>Painel RH</h1>
+    <form method="get">
+        <label>Status:</label>
+        <select name="status">
+            <option value="">Todos</option>
+            <option value="em_analise">Em Análise</option>
+            <option value="aprovado">Aprovado</option>
+            <option value="reprovado">Reprovado</option>
+        </select>
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <ul>
+        {% for c in candidatos %}
+            <li>
+                <a href="{% url 'visualizar_candidato' c.id %}">{{ c.nome }}</a>
+                - {{ c.vaga_interesse }} - {{ c.get_status_display }}
+            </li>
+        {% empty %}
+            <li> Nenhum candidato encontrado.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Candidato</title>
+</head>
+<body>
+    <h1>{{ candidato.nome }}</h1>
+    <p>Email: {{ candidato.email }}</p>
+    <p>Telefone: {{ candidato.telefone }}</p>
+    <p>Vaga: {{ candidato.vaga_interesse }}</p>
+    <p>Status: {{ candidato.get_status_display }}</p>
+    <p><a href="{{ candidato.curriculo.url}}" target="_blank">Ver Currículo</a></p>
+    
+    <a href="{% url 'avaliar_candidato' candidato.id %}">Avaliar Candidato</a>
+</body>
+</html>

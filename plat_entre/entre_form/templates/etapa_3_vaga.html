@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etapa 3 - Dados da Vaga</title>
+</head>
+<body>
+    <h1>Etapa 3 - Dados da Vaga</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">Finalizar</button>
+    </form>
+</body>
+</html>

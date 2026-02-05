@@ -17,15 +17,16 @@ class Candidato(models.Model):
     endereco = models.TextField()
     cidade = models.CharField(max_length=100)
     estado = models.CharField(max_length=2)
+    curriculo = models.FileField(upload_to='curriculos/')
 
     #Dados Profissionais
     formacao = models.TextField()
     instituicao_ensino = models.CharField(max_length=300)
-    ano_concluido = models.IntegerField(    )
+    ano_concluido = models.IntegerField()
     experiencia_anos = models.IntegerField(help_text="Anos de experiência profissional")
     cargo_atual = models.CharField(max_length= 200, blank=True, help_text="Cargo atual ou Último cargo ocupado")
     empresa_atual = models.CharField(max_length=200, blank= True, help_text="Empresa atual ou última empresa que trabalhou")
-    salario_atual = models.DecimalField(max_digits=15, decimal_places=2, blank=True, help_text="Salario atual ou ultimo salario")
+    salario_atual = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True, help_text="Salario atual ou ultimo salario")
     resumo_profissional = models.TextField()
 
     #Dados da Vaga
