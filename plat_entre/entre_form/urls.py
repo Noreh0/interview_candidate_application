@@ -11,5 +11,6 @@ urlpatterns = [
     path('rh/painel/', views.painel_rh, name="painel_rh"),
     path('rh/login/', views.login_rh, name="login_rh"),
     path('rh/candidato/<int:candidato_id>/', views.visualizar_candidato, name="visualizar_candidato"),
-    path('rh/candidato/<int:candidato_id>/avaliar/', views.avaliar_candidato, name="avaliar_candidato"),    
+    path('rh/candidato/<int:candidato_id>/avaliar/', views.avaliar_candidato, name="avaliar_candidato"),
+    path('rh/exportar/csv/', views.exportar_candidatos_csv, name="exportar_candidatos_csv"),    
 ]

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+import csv
 from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
 from .models import Candidato
@@ -21,7 +22,7 @@ def verificar_candidato(request):
             try:
                 candidato = Candidato.objects.get(email=email, cpf=cpf)
                 request.session['candidato_id_edit'] = candidato.id
-                request.session.set_expiry(900)
+                request.session.set_expiry(120)
                 messages.success(request, f"olá {candidato.nome}! Você pode editar agora os seus dados.")
                 return redirect('etapa_1_pessoais')
             except Candidato.DoesNotExist:
@@ -181,3 +182,17 @@ def avaliar_candidato(request, candidato_id):
     else:
         form = avaliacaoRH(instance=candidato)
     return render(request, 'entre_form/avaliar_candidato.html', {'form': form, 'candidato': candidato})
+
+@login_required
+@user_passes_test(is_rh)
+def exportar_candidatos_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="candidatos.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Nome', 'Email', 'Telefone', 'Data de Nascimento', 'CPF', 'Endereço', 'Cidade', 'Estado', 'Formação', 'Instituição de Ensino', 'Ano de Conclusão', 'Anos de Experiência', 'Cargo Atual', 'Empresa Atual', 'Resumo Profissional', 'Vaga de Interesse', 'Pretensão Salarial', 'Disponibilidade para Início', 'Disponibilidade de Locomoção', 'Regime de Trabalho', 'Status', 'Observação RH'])
+
+    for c in Candidato.objects.all().order_by('-data_cadastro'):
+        writer.writerow([c.nome, c.email, c.telefone, c.data_nascimento, c.cpf, c.endereco, c.cidade, c.estado, c.formacao, c.instituicao_ensino, c.ano_concluido, c.experiencia_anos, c.cargo_atual, c.empresa_atual, c.resumo_profissional, c.vaga_interesse, c.pretensao_salarial, c.disponibilidade_inicio, c.disponibilidade_locomocao, c.regime_trabalho, c.status, c.observacao_rh])
+    return response
+    
