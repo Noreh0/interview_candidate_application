@@ -1,32 +1,72 @@
-<!DOCTYPE html>
-<html lang="PT-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel RH</title>
-</head>
-<body>
-    <h1>Painel RH</h1>
-    <form method="get">
-        <label>Status:</label>
-        <select name="status">
-            <option value="">Todos</option>
-            <option value="em_analise">Em Análise</option>
-            <option value="aprovado">Aprovado</option>
-            <option value="reprovado">Reprovado</option>
-        </select>
-        <button type="submit">Filtrar</button>
+{% extends 'entre_form/base.html' %}
+
+{% block title %}Painel RH{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Painel de Candidatos</h2>
+    <a href="{% url 'admin:logout' %}" class="btn btn-outline-danger">Sair</a>
+</div>
+
+<div class="main-card">
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-auto">
+            <label class="form-label">Filtrar por Status:</label>
+        </div>
+        <div class="col-auto">
+            <select name="status" class="form-select">
+                <option value="">Todos</option>
+                <option value="em_analise" {% if filtro_atual == 'em_analise' %}selected{% endif %}>Em Análise</option>
+                <option value="aprovado" {% if filtro_atual == 'aprovado' %}selected{% endif %}>Aprovado</option>
+                <option value="reprovado" {% if filtro_atual == 'reprovado' %}selected{% endif %}>Reprovado</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-laranja">Filtrar</button>
+            <a href="{% url 'painel_rh' %}" class="btn btn-secondary">Limpar</a>
+        </div>
     </form>
 
-    <ul>
-        {% for c in candidatos %}
-            <li>
-                <a href="{% url 'visualizar_candidato' c.id %}">{{ c.nome }}</a>
-                - {{ c.vaga_interesse }} - {{ c.get_status_display }}
-            </li>
-        {% empty %}
-            <li> Nenhum candidato encontrado.</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Vaga</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for candidato in candidatos %}
+                <tr>
+                    <td>{{ candidato.nome_completo }}</td>
+                    <td>{{ candidato.email }}</td>
+                    <td>{{ candidato.vaga_interesse }}</td>
+                    <td>{{ candidato.data_cadastro|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        {% if candidato.status == 'em_analise' %}
+                            <span class="badge bg-warning">Em Análise</span>
+                        {% elif candidato.status == 'aprovado' %}
+                            <span class="badge bg-success">Aprovado</span>
+                        {% elif candidato.status == 'reprovado' %}
+                            <span class="badge bg-danger">Reprovado</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'visualizar_candidato' candidato.id %}" class="btn btn-sm btn-info">Ver</a>
+                        <a href="{% url 'avaliar_candidato' candidato.id %}" class="btn btn-sm btn-laranja">Avaliar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">Nenhum candidato encontrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

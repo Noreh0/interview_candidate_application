@@ -1,26 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verificar Candidato</title>
-</head>
-<body>
-    <h1>Editar Cadastro</h1>
-    <p>Já se cadastrou? Digite as informações necessárias abaixo:</p>
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li style="color: red;">{{message}}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Verificar</button>
-    </form>
-    <hr>
-    <a href="{% url 'etapa_1_pessoais' %}">Não tenho cadastro, mas quero me candidatar!</a>
-</body>
-</html>
+{% extends 'entre_form/base.html' %}
+
+{% block title %}Verificar Candidato{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="main-card">
+            <h4 class="mb-3">Verificar Cadastro</h4>
+            <p class="mb-4">Já se cadastrou? Informe seu Email e CPF para editar o cadastro</p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">
+                            {{ field.label }}
+                            {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-laranja">Verificar</button>
+                </div>
+            </form>
+            <hr>
+            <a href="{% url 'etapa_1_pessoais' %}" class="btn btn-link">
+                Não tenho cadastro, quero me candidatar!
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

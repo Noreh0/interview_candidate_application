@@ -1,21 +1,45 @@
-<!DOCTYPE html>
-<html lang="PT-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Etapa 1 - Dados Pessoais</title>
-</head>
-<body>
-    {% if edit_mode %}
-        <h1>Editando Dados Pessoais</h1>
-    {% else %}
-        <h1>Etapa 1 - Dados Pessoais</h1>
-        <p> Já tem Cadastro?<a href="{% url 'verificar_candidato' %}">Clique aqui para editar seu Perfil</a></p>
-    {% endif %}
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Próxima etapa</button>
-    </form>
-</body>
-</html>
+{% extends 'entre_form/base.html' %}
+
+{% block title %}Etapa 1 - Dados Pessoais{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="main-card">
+            <h4 class="mb-3">Inscrição de Candidato - Etapa 1 de 3</h4>
+
+            <div class="progress mb-4">
+                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" 
+                     style="width: 33%" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">
+                    33%
+                </div>
+            </div>
+
+            <h5 class="mb-4">Dados Pessoais</h5>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">
+                            {{ field.label }}
+                            {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger">{{ field.errors }}</div>
+                        {% endif %}
+                        {% if field.help_text %}
+                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-laranja">Próxima Etapa →</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
