@@ -53,6 +53,16 @@ MIDDLEWARE = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+LOGIN_URL = 'login_rh'
+LOGIN_REDIRECT_URL = 'painel_rh'
+
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+SESSION_COOKIE_AGE = 120
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 ROOT_URLCONF = 'entrevista.urls'
 
 TEMPLATES = [

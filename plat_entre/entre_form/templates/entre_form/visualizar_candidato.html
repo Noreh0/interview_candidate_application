@@ -1,18 +1,90 @@
-<!DOCTYPE html>
-<html lang="PT-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil do Candidato</title>
-</head>
-<body>
-    <h1>{{ candidato.nome }}</h1>
-    <p>Email: {{ candidato.email }}</p>
-    <p>Telefone: {{ candidato.telefone }}</p>
-    <p>Vaga: {{ candidato.vaga_interesse }}</p>
-    <p>Status: {{ candidato.get_status_display }}</p>
-    <p><a href="{{ candidato.curriculo.url}}" target="_blank">Ver Currículo</a></p>
-    
-    <a href="{% url 'avaliar_candidato' candidato.id %}">Avaliar Candidato</a>
-</body>
-</html>
+{% extends 'entre_form/base.html' %}
+
+{% block title %}Candidato - {{ candidato.nome_completo }}{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <a href="{% url 'painel_rh' %}" class="btn btn-secondary">← Voltar ao Painel</a>
+    <a href="{% url 'avaliar_candidato' candidato.id %}" class="btn btn-laranja">Avaliar Candidato</a>
+</div>
+
+<div class="main-card">
+    <h4 class="mb-3">Perfil do Candidato</h4>
+
+    <h5 class="border-bottom pb-2 mb-3">Dados Pessoais</h5>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <p><strong>Nome:</strong> {{ candidato.nome_completo }}</p>
+            <p><strong>Email:</strong> {{ candidato.email }}</p>
+            <p><strong>Telefone:</strong> {{ candidato.telefone }}</p>
+            <p><strong>Data de Nascimento:</strong> {{ candidato.data_nascimento|date:"d/m/Y" }}</p>
+        </div>
+        <div class="col-md-6">
+            <p><strong>CPF:</strong> {{ candidato.cpf }}</p>
+            <p><strong>Cidade:</strong> {{ candidato.cidade }}</p>
+            <p><strong>Estado:</strong> {{ candidato.estado }}</p>
+            <p><strong>Endereço:</strong> {{ candidato.endereco }}</p>
+        </div>
+        <div class="col-12">
+            <p><strong>Currículo</strong>
+                {% if candidato.curriculo %}
+                    <a href="{{ candidato.curriculo.url }}" class="btn btn-sm btn-laranja" target="_blank" rel="noopener">
+                        Visualizar / Baixar Currículo
+                    </a>
+                {% else %}
+                    <span class="text-muted">Não enviado</span>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <h5 class="border-bottom pb-2 mb-3">Dados Profissionais</h5>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <p><strong>Formação:</strong> {{ candidato.formacao }}</p>
+            <p><strong>Instituição:</strong> {{ candidato.instituicao_ensino }}</p>
+            <p><strong>Ano de Conclusão:</strong> {{ candidato.ano_concluido }}</p>
+            <p><strong>Anos de Experiência:</strong> {{ candidato.experiencia_anos }}</p>
+        </div>
+        <div class="col-md-6">
+            <p><strong>Cargo Atual:</strong> {{ candidato.cargo_atual|default:"Não informado" }}</p>
+            <p><strong>Empresa Atual:</strong> {{ candidato.empresa_atual|default:"Não informado" }}</p>
+        </div>
+        <div class="col-12">
+            <p><strong>Resumo Profissional:</strong></p>
+            <p class="bg-light p-3">{{ candidato.resumo_profissional }}</p>
+        </div>
+    </div>
+
+    <h5 class="border-bottom pb-2 mb-3">Dados da Vaga</h5>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <p><strong>Vaga de Interesse:</strong> {{ candidato.vaga_interesse }}</p>
+            <p><strong>Pretensão Salarial:</strong> R$ {{ candidato.pretensao_salarial }}</p>
+            <p><strong>Disponibilidade:</strong> {{ candidato.disponibilidade_inicio|date:"d/m/Y" }}</p>
+            <p><strong>Regime de Trabalho:</strong> {{ candidato.get_regime_trabalho_display }}</p>
+        </div>
+    </div>
+
+    <h5 class="border-bottom pb-2 mb-3">Status e Avaliação</h5>
+    <div class="row">
+        <div class="col-md-6">
+            <p><strong>Status:</strong> 
+                {% if candidato.status == 'em_analise' %}
+                    <span class="badge bg-warning">Em Análise</span>
+                {% elif candidato.status == 'aprovado' %}
+                    <span class="badge bg-success">Aprovado</span>
+                {% elif candidato.status == 'reprovado' %}
+                    <span class="badge bg-danger">Reprovado</span>
+                {% endif %}
+            </p>
+            <p><strong>Data de Cadastro:</strong> {{ candidato.data_cadastro|date:"d/m/Y H:i" }}</p>
+            <p><strong>Avaliado por:</strong> {{ candidato.avaliado_por|default:"Não avaliado" }}</p>
+        </div>
+        <div class="col-12">
+            <p><strong>Observações do RH:</strong></p>
+            <p class="bg-light p-3">{{ candidato.observacoes_rh|default:"Nenhuma observação." }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

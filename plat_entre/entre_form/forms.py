@@ -30,7 +30,7 @@ class dadosProfissionais(forms.ModelForm):
         widgets = {
             'formacao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Engenharia Mecânica'}),
             'instituicao_ensino': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Universidade Federal do Paraná'}),
-            'ano_concluido': forms.NumberInput(attrs={'class': 'form-control', 'min': '1950', 'max': '2030'}),
+            'ano_concluido': forms.NumberInput(attrs={'class': 'form-control', 'min': '1950', 'max': '2050'}),
             'experiencia_anos': forms.NumberInput(attrs={'class': 'form-control', 'min': '0'}),
             'cargo_atual': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Projetista'}),
             'empresa_atual': forms.TextInput(attrs={'class': 'form-control'}),

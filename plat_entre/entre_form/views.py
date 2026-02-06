@@ -1,4 +1,6 @@
 from datetime import datetime
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
@@ -19,6 +21,7 @@ def verificar_candidato(request):
             try:
                 candidato = Candidato.objects.get(email=email, cpf=cpf)
                 request.session['candidato_id_edit'] = candidato.id
+                request.session.set_expiry(900)
                 messages.success(request, f"olá {candidato.nome}! Você pode editar agora os seus dados.")
                 return redirect('etapa_1_pessoais')
             except Candidato.DoesNotExist:
@@ -26,7 +29,18 @@ def verificar_candidato(request):
     else:
         form = verificarCandidatoForm()
     return render(request, 'entre_form/verificar_candidato.html', {'form': form})
-    
+
+def login_rh(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('painel_rh')
+        messages.error(request, "Usuário ou senha inválidos.")
+    return render(request, 'entre_form/login_rh.html')
+
 def etapa_1_pessoais(request):
     candidato_id = request.session.get('candidato_id_edit')
     instance = None
@@ -56,7 +70,7 @@ def etapa_1_pessoais(request):
             messages.success(request, "Dados pessoais salvos! Continue para a próxima etapa.")
             return redirect('etapa_2_profissionais')
     else:
-        form = dadosPessoais()
+        form = dadosPessoais(instance=instance)
     return render(request, 'entre_form/etapa_1_pessoais.html', {'form': form, 'etapa': 1, 'edit_mode': bool(instance)})
 
 def etapa_2_profissionais(request):
@@ -91,8 +105,9 @@ def etapa_3_vaga(request):
     elif 'dados_etapa_2' not in request.session:
         messages.error(request, 'Por favor, preencha os dados profissionais primeiro.')
         return redirect('etapa_2_profissionais')
+    
     if request.method == 'POST':
-        form = dadosVagas(request.POST)
+        form = dadosVagas(request.POST, instance=instance)
         if form.is_valid():
             if instance:
                 form.save()
@@ -126,7 +141,7 @@ def etapa_3_vaga(request):
             messages.success(request, "Inscrição realizada com sucesso!")
             return redirect('sucesso_inscricao')
     else:
-        form = dadosVagas()
+        form = dadosVagas(instance=instance)
     return render(request, 'entre_form/etapa_3_vaga.html', {'form': form, 'etapa': 3, 'edit_mode': bool(instance)})
 
 def sucesso_inscricao(request):
