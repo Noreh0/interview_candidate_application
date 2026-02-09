@@ -1,5 +1,5 @@
 from django import forms
-from .models import Candidato
+from .models import Candidato, Vaga
 
 class verificarCandidatoForm(forms.Form):
     email = forms.EmailField(label="Seu E-mail", widget = forms.EmailInput(attrs={'class': 'form-control'}))
@@ -42,7 +42,6 @@ class dadosVagas(forms.ModelForm):
     class Meta:
         model = Candidato
         fields = ['vaga_interesse', 'pretensao_salarial', 'disponibilidade_inicio', 'disponibilidade_locomocao', 'regime_trabalho']
-
         widgets = {
             'vaga_interesse': forms.Select(attrs={'class': 'form-control'}),
             'pretensao_salarial': forms.NumberInput(attrs={'class': 'form-control', 'min': '0', 'step': '0.01'}),
@@ -50,6 +49,10 @@ class dadosVagas(forms.ModelForm):
             'disponibilidade_locomocao': forms.Select(attrs={'class': 'form-control'}),
             'regime_trabalho': forms.Select(attrs={'class': 'form-control'})
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['vaga_interesse'].queryset = Vaga.objects.filter(ativa=True)  
 
 class avaliacaoRH(forms.ModelForm):
     class Meta:
