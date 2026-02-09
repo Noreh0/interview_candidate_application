@@ -1,6 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Vaga(models.Model):
+    titulo = models.CharField(max_length=200)
+    descricao = models.TextField(blank=True)
+    ativa = models.BooleanField(default=True)
+    criada_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-criada_em']
+
+    def __str__(self):
+        return self.titulo
+
 class Candidato(models.Model):
     STATUS_CHOICES = [
         ('em_analise', 'Em Analise'),
@@ -11,6 +23,7 @@ class Candidato(models.Model):
         ('sim', 'Sim'),
         ('nao', 'Não')
         ]
+    
     
     #Dados pessoais
     nome = models.CharField(max_length=200)
@@ -34,7 +47,7 @@ class Candidato(models.Model):
     resumo_profissional = models.TextField()
 
     #Dados da Vaga
-    vaga_interesse = models.CharField(max_length=200)
+    vaga_interesse = models.ForeignKey(Vaga, on_delete=models.PROTECT, related_name='candidatos')
     pretensao_salarial = models.DecimalField(max_digits=15, decimal_places=2, help_text="Expectativa salarial para a vaga")
     disponibilidade_inicio = models.DateField(help_text="Data em que possa ingressar")
     disponibilidade_locomocao = models.CharField(max_length=30, choices=LOCOMOCAO_CHOICES)

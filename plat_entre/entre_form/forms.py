@@ -44,7 +44,7 @@ class dadosVagas(forms.ModelForm):
         fields = ['vaga_interesse', 'pretensao_salarial', 'disponibilidade_inicio', 'disponibilidade_locomocao', 'regime_trabalho']
 
         widgets = {
-            'vaga_interesse': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Engenheiro de Projetos'}),
+            'vaga_interesse': forms.Select(attrs={'class': 'form-control'}),
             'pretensao_salarial': forms.NumberInput(attrs={'class': 'form-control', 'min': '0', 'step': '0.01'}),
             'disponibilidade_inicio': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'disponibilidade_locomocao': forms.Select(attrs={'class': 'form-control'}),
