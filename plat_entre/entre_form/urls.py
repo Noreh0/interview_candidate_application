@@ -13,4 +13,9 @@ urlpatterns = [
     path('rh/candidato/<int:candidato_id>/', views.visualizar_candidato, name="visualizar_candidato"),
     path('rh/candidato/<int:candidato_id>/avaliar/', views.avaliar_candidato, name="avaliar_candidato"),
     path('rh/exportar/csv/', views.exportar_candidatos_csv, name="exportar_candidatos_csv"),    
+
+    path('rh/vagas/', views.listar_vagas, name='listar_vagas'),
+    path('rh/vagas/nova/', views.criar_vaga, name='criar_vaga'),
+    path('rh/vagas/<int:vaga_id>/editar/', views.editar_vaga, name='editar_vaga'),
+    path('rh/vagas/<int:vaga_id>/desativar/', views.desativar_vaga, name='desativar_vaga')
 ]

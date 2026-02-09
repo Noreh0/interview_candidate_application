@@ -14,7 +14,7 @@
     <h5 class="border-bottom pb-2 mb-3">Dados Pessoais</h5>
     <div class="row mb-4">
         <div class="col-md-6">
-            <p><strong>Nome:</strong> {{ candidato.nome_completo }}</p>
+            <p><strong>Nome:</strong> {{ candidato.nome }}</p>
             <p><strong>Email:</strong> {{ candidato.email }}</p>
             <p><strong>Telefone:</strong> {{ candidato.telefone }}</p>
             <p><strong>Data de Nascimento:</strong> {{ candidato.data_nascimento|date:"d/m/Y" }}</p>
@@ -83,7 +83,7 @@
         </div>
         <div class="col-12">
             <p><strong>Observações do RH:</strong></p>
-            <p class="bg-light p-3">{{ candidato.observacoes_rh|default:"Nenhuma observação." }}</p>
+            <p class="bg-light p-3">{{ candidato.observacao_rh|default:"Nenhuma observação." }}</p>
         </div>
     </div>
 </div>

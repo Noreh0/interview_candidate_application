@@ -8,6 +8,7 @@
     <div class="d-flex gap-2">
         <a href="{% url 'exportar_candidatos_csv' %}" class="btn btn-laranja">Exportar CSV</a>
         <a href="{% url 'login_rh' %}" class="btn btn-outline-danger">Sair</a>
+        <a href="{% url 'listar_vagas' %}" class="btn btn-outline-danger">Vagas</a>
     </div>
 </div>
 
@@ -22,6 +23,19 @@
                 <option value="em_analise" {% if filtro_atual == 'em_analise' %}selected{% endif %}>Em Análise</option>
                 <option value="aprovado" {% if filtro_atual == 'aprovado' %}selected{% endif %}>Aprovado</option>
                 <option value="reprovado" {% if filtro_atual == 'reprovado' %}selected{% endif %}>Reprovado</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <label class="form-label">Filtro pot vaga:</label>
+        </div>
+        <div class="col-alto">
+            <select name="vaga" class="form-select">
+                <option value="">Todas</option>
+                {% for vaga in vagas %}
+                    <option value="{{ vaga.id }}" {% if filtro_vaga|stringformat:"s" == vaga.id|stringformat:"s" %}selected{% endif %}>
+                        {{ vaga.titulo }}
+                    </option>
+                {% endfor %}
             </select>
         </div>
         <div class="col-auto">
@@ -45,7 +59,7 @@
             <tbody>
                 {% for candidato in candidatos %}
                 <tr>
-                    <td>{{ candidato.nome_completo }}</td>
+                    <td>{{ candidato.nome }}</td>
                     <td>{{ candidato.email }}</td>
                     <td>{{ candidato.vaga_interesse }}</td>
                     <td>{{ candidato.data_cadastro|date:"d/m/Y H:i" }}</td>

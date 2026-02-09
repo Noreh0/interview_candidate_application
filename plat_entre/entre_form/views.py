@@ -4,11 +4,23 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+from django import forms
 import csv
 from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
-from .models import Candidato
+from .models import Candidato, Vaga
 from .forms import dadosPessoais, dadosProfissionais, dadosVagas, avaliacaoRH, verificarCandidatoForm
+
+class vagaForm(forms.ModelForm):
+    class Meta:
+        model = Vaga
+        fields = ['titulo', 'descricao', 'ativa']
+        widgets = {
+            'tittulo': forms.TextInput(attrs={'class': 'form-control'}),
+            'descricao': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'ativa': forms.CheckboxInput(attrs={'class': 'form-check-input'})
+        }
+
 
 def is_rh(user):
     return user.is_staff or user.groups.filter(name="RH").exists()
@@ -151,15 +163,24 @@ def sucesso_inscricao(request):
 @login_required
 @user_passes_test(is_rh)
 def painel_rh(request):
-    filtro = request.GET.get('status', '')
-    if filtro:
-        candidatos = Candidato.objects.filter(status=filtro)
-    else:
-        candidatos = Candidato.objects.all()
+    filtro_status = request.GET.get('status', '')
+    filtro_vaga = request.GET.get('vaga', '')
+
+    candidatos = Candidato.objects.all()
+
+    if filtro_status:
+        candidatos = Candidato.objects.filter(status=filtro_status)
+
+    if filtro_vaga:
+        candidatos = candidatos.filter(vaga_interesse_id = filtro_vaga)
+
+    vagas = Vaga.objects.filter(ativa=True)
 
     context = {
         'candidatos': candidatos,
-        'filtro_atual': filtro
+        'filtro_atual': filtro_status,
+        'filtro_vaga': filtro_vaga,
+        'vagas': vagas,
     }
     return render(request, 'entre_form/painel_rh.html', context)
 
@@ -196,3 +217,44 @@ def exportar_candidatos_csv(request):
         writer.writerow([c.nome, c.email, c.telefone, c.data_nascimento, c.cpf, c.endereco, c.cidade, c.estado, c.formacao, c.instituicao_ensino, c.ano_concluido, c.experiencia_anos, c.cargo_atual, c.empresa_atual, c.resumo_profissional, c.vaga_interesse, c.pretensao_salarial, c.disponibilidade_inicio, c.disponibilidade_locomocao, c.regime_trabalho, c.status, c.observacao_rh])
     return response
     
+@login_required
+@user_passes_test(is_rh)
+def listar_vagas(request):
+    vagas = Vaga.objects.all()
+    return render(request, 'entre_form/listar_vagas.html', {'vagas': vagas})
+
+@login_required
+@user_passes_test(is_rh)
+def criar_vaga(request):
+    if request.method == 'POST':
+        form = vagaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Vaga criada com sucesso!')
+            return redirect('listar_vagas')
+    else:
+        form = vagaForm()
+    return render(request, 'entre_form/vagas_form.html', {'form': form})
+
+@login_required
+@user_passes_test(is_rh)
+def editar_vaga(request, vaga_id):
+    vaga = get_object_or_404(Vaga, pk=vaga_id)
+    if request.method =='POST':
+        form = vagaForm(request.POST, instance=vaga)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Vaga atualizada!')
+            return redirect('listar_vagas')
+    else:
+        form = vagaForm(instance=vaga)
+    return render(request, 'entre_form/vagas_form.html', {'form': form, 'edit_mode': True})
+
+@login_required
+@user_passes_test(is_rh)
+def desativar_vaga(request, vaga_id):
+    vaga = get_object_or_404(Vaga, pk=vaga_id)
+    vaga.ativa = False
+    vaga.save()
+    messages.success(request, 'Vaga desativada!')
+    return redirect('listar_vagas')
