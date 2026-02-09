@@ -75,6 +75,71 @@
         footer {
             margin-top: auto;
         }
+
+        .navbar-inner {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+        }
+        .navbar-title {
+            flex: 1;
+            text-align: center;
+        }
+        .navbar-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+        }
+        @media (max-width: 768px) {
+        .navbar-custom {
+            min-height: auto;
+            padding: 12px 0;
+        }
+        .navbar-logo {
+            height: 60px;
+            margin-right: 0;
+            margin-bottom: 8px;
+        }
+        .navbar-brand-title {
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .main-card {
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .table-responsive {
+            font-size: 0.9rem;
+        }
+        .btn {
+            width: 100%;
+        }
+        .d-flex.gap-2.position-absolute.end-0 {
+            position: static !important;
+            width: 100%;
+            justify-content: center;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .navbar-inner {
+            flex-direction: column;
+            align-items: center;
+        }
+        .navbar-title {
+            text-align: center;
+        }
+        .navbar-actions {
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .navbar-actions .btn {
+            width: auto;
+        }
+    }
     </style>
     <script>
         function maskCPF(value) {
@@ -106,16 +171,12 @@
 </head>
 <body>
     <nav class="navbar navbar-dark bg-primary navbar-custom">
-        <div class="container d-flex justify-content-center align-items-center">
+        <div class="container navbar-inner">
             <img src="{% static 'img/logo-empresa.png' %}" alt="Logo da Empresa" class="navbar-logo">
-        </div>
-        <div class="container d-flex align-items-center justify-content-between">
-            <div class="container d-flex justify-content-center align-items-center">
-                <span class="navbar-brand mb-0 h1 navbar-brand-title">Sistema de Inscrição de Candidatos</span>
-                <div class="d-flex gap-2 position-absolute end-0">
-                    <a href="{% url 'verificar_candidato' %}" class="btn btn-laranja ms-3">Inicio</a>
-                    <a href="{% url 'login_rh' %}" class="btn btn-laranja">Login RH</a>
-                </div>
+            <span class="navbar-brand mb-0 h1 navbar-brand-title navbar-title">Sistema de Inscrição de Candidatos</span>
+            <div class="navbar-actions">
+                <a href="{% url 'verificar_candidato' %}" class="btn btn-laranja">Inicio</a>
+                <a href="{% url 'login_rh' %}" class="btn btn-laranja">Login RH</a>
             </div>
         </div>
     </nav>
